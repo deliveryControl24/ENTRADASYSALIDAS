@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificador de Horario</title>
+    <!-- Materialize CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f5f5f5;
+            padding: 20px;
+            height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .input-field {
+            margin-bottom: 20px;
+        }
+        .btn {
+            width: 100%;
+            margin-top: 20px;
+        }
+        h4 {
+            margin-bottom: 30px;
+        }
+        .select-wrapper {
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h4>Notificador de Horario de Trabajo</h4>
+        <form id="notificacionForm">
+            <div class="input-field">
+                <input id="telefono" type="text" name="telefono" value="+505" required>
+                <label for="telefono">Número de teléfono</label>
+            </div>
+            <div class="input-field">
+                <input id="horaEntrada" type="time" name="horaEntrada" required>
+                <label for="horaEntrada">Hora de Entrada</label>
+            </div>
+            <div class="input-field">
+                <input id="horaSalida" type="time" name="horaSalida" required>
+                <label for="horaSalida">Hora de Salida</label>
+            </div>
+            <button type="submit" class="btn waves-effect waves-light">Enviar Notificación</button>
+        </form>
+    </div>
+
+    <!-- Materialize JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        document.getElementById('notificacionForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const telefono = document.getElementById('telefono').value.trim();
+            const horaEntrada = document.getElementById('horaEntrada').value.trim();
+            const horaSalida = document.getElementById('horaSalida').value.trim();
+
+            // Validación básica
+            if (!telefono || !horaEntrada || !horaSalida) {
+                alert('Todos los campos son obligatorios.');
+                return;
+            }
+
+            // Validación de número de teléfono (debe incluir el código del país)
+            const telefonoRegex = /^\+\d{10,15}$/;
+            if (!telefonoRegex.test(telefono)) {
+                alert('El número de teléfono debe incluir el código del país y tener entre 10 y 15 dígitos.');
+                return;
+            }
+
+            // Obtener la hora local de Nicaragua (UTC-6) en formato de 12 horas (AM/PM)
+            const fechaLocal = new Date();
+            const opcionesFecha = { timeZone: 'America/Managua', hour12: true, hour: '2-digit', minute: '2-digit' };
+            const horaLocal = fechaLocal.toLocaleTimeString('es-NI', opcionesFecha);
+
+            // Convertir horaEntrada y horaSalida al formato de 12 horas (AM/PM)
+            const horaEntrada12 = new Date(`1970-01-01T${horaEntrada}`).toLocaleTimeString('es-NI', opcionesFecha);
+            const horaSalida12 = new Date(`1970-01-01T${horaSalida}`).toLocaleTimeString('es-NI', opcionesFecha);
+
+            const mensaje = `Hola, tu hora de entrada es a las ${horaEntrada12} y tu hora de salida es a las ${horaSalida12}. Hora local actual: ${horaLocal}.`;
+            const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+
+            // Almacenar la notificación en localStorage
+            const notificaciones = JSON.parse(localStorage.getItem('notificaciones')) || [];
+            notificaciones.push({ telefono, horaEntrada, horaSalida, horaLocal });
+            localStorage.setItem('notificaciones', JSON.stringify(notificaciones));
+
+            window.open(url, '_blank');
+            alert('Notificación enviada correctamente.');
+            document.getElementById('notificacionForm').reset();
+        });
+    </script>
+</body>
+</html>
