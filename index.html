@@ -91,11 +91,11 @@
             const horaEntrada12 = new Date(`1970-01-01T${horaEntrada}`).toLocaleTimeString('es-NI', opcionesFecha);
             const horaSalida12 = new Date(`1970-01-01T${horaSalida}`).toLocaleTimeString('es-NI', opcionesFecha);
 
-            const mensaje = `Te saluda la central Delivery Express 🛵💥
+            const mensaje = `Te saluda la central Delivery Express
 Tu horario del día de mañana.
 
 Entrada: ${horaEntrada12}
-Salida: ${horaSalida12}
+Salida:    ${horaSalida12}
 
 Bendiciones`;
             const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
@@ -112,3 +112,4 @@ Bendiciones`;
     </script>
 </body>
 </html>
+
