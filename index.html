@@ -91,7 +91,13 @@
             const horaEntrada12 = new Date(`1970-01-01T${horaEntrada}`).toLocaleTimeString('es-NI', opcionesFecha);
             const horaSalida12 = new Date(`1970-01-01T${horaSalida}`).toLocaleTimeString('es-NI', opcionesFecha);
 
-            const mensaje = `Hola, tu hora de entrada es a las ${horaEntrada12} y tu hora de salida es a las ${horaSalida12}. Hora local actual: ${horaLocal}.`;
+            const mensaje = `Te saluda la central Delivery Express 🛵💥
+Tu horario del día de mañana.
+
+Entrada: ${horaEntrada12}
+Salida: ${horaSalida12}
+
+Bendiciones`;
             const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
 
             // Almacenar la notificación en localStorage
